@@ -1,5 +1,6 @@
 <?php
 namespace WikiParserDemo {
+
     class Document
     {
         protected $dirty = false;
@@ -27,7 +28,7 @@ namespace WikiParserDemo {
         }
 
         /**
-         * @param boolean $dirty
+         *
          */
         public function setDirty()
         {
@@ -146,9 +147,8 @@ namespace WikiParserDemo {
         {
             $this->setNotFoundWhen(false);
             $this->setTitle($title);
-            $this->setContent(
-                TextTools::getInstance()->trashWikiMarkup($content)
-            );
+            $content = TextTools::getInstance()->trashWikiMarkup($content);
+            $this->setContent($content);
             $this->setWordCount(
                 TextTools::getInstance()->countWords($content)
             );

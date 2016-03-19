@@ -37,7 +37,7 @@ namespace WikiParserDemo {
         {
             $this->title = $title;
             $document = new Document();
-            if($this->updateDocumentOnLastModifiedDiff($document, $localDocument)) {
+            if ($this->updateDocumentOnLastModifiedDiff($document, $localDocument)) {
                 if ($this->updateDocumentOnLastRevIdDiff($document, $localDocument)) {
                     $content = $this->downloadDocument();
                     if ($content) {
@@ -55,14 +55,15 @@ namespace WikiParserDemo {
          * @param Document|null $localDocument
          * @return bool
          */
-        private function updateDocumentOnLastModifiedDiff(Document &$document, Document $localDocument = null) {
-            if($localDocument && $localDocument->getNotFoundWhen()+self::CACHE_404_TIMEOUT > time()) {
+        private function updateDocumentOnLastModifiedDiff(Document &$document, Document $localDocument = null)
+        {
+            if ($localDocument && $localDocument->getNotFoundWhen() + self::CACHE_404_TIMEOUT > time()) {
                 return false;
             }
             $lastModified = $this->checkLastModified();
-            if($lastModified!==false) {
+            if ($lastModified !== false) {
                 $document->setLastModified($lastModified);
-                if(!$localDocument||$localDocument->getLastModified()!=$document->getLastModified()) {
+                if (!$localDocument || $localDocument->getLastModified() !== $document->getLastModified()) {
                     $document->setDirty();
                     return true;
                 }
@@ -75,11 +76,12 @@ namespace WikiParserDemo {
          * @param Document|null $localDocument
          * @return bool
          */
-        private function updateDocumentOnLastRevIdDiff(Document &$document, Document $localDocument = null) {
+        private function updateDocumentOnLastRevIdDiff(Document &$document, Document $localDocument = null)
+        {
             $lastRevId = $this->checkLastRevId();
-            if($lastRevId!==false) {
+            if ($lastRevId !== false) {
                 $document->setLastRevId($lastRevId);
-                if (!$localDocument || $localDocument->getLastRevId() != $document->getLastRevId()) {
+                if (!$localDocument || $localDocument->getLastRevId() !== $document->getLastRevId()) {
                     $document->setDirty();
                     return true;
                 }
@@ -137,7 +139,7 @@ namespace WikiParserDemo {
             $request = $this->client->get('https://cs.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=json&titles=' . $this->title);
             $response = $request->send();
             if ($response->isSuccessful()) {
-                return $this->getFirstPageFromResponse($response)->revisions[0]->{"*"};
+                return $this->getFirstPageFromResponse($response)->revisions[0]->{'*'};
             }
             return false;
         }

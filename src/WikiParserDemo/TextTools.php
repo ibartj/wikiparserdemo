@@ -1,5 +1,6 @@
 <?php
 namespace WikiParserDemo {
+
     class TextTools
     {
         /**
@@ -7,7 +8,6 @@ namespace WikiParserDemo {
          */
         private $patterns = array(
             "/\r\n/",
-
             // Headings
             "/^==== (.+?) ====$/m",                        // Subsubheading
             "/^=== (.+?) ===$/m",                        // Subheading
@@ -31,16 +31,16 @@ namespace WikiParserDemo {
             "/^:: *(.+)$/m",                        // Subindentation second pass
 
             // Ordered list
-            "/[\n\r]?#.+([\n|\r]#.+)+/",                    // First pass, finding all blocks
-            "/[\n\r]#(?!#) *(.+)(([\n\r]#{2,}.+)+)/",            // List item with sub items of 2 or more
-            "/[\n\r]#{2}(?!#) *(.+)(([\n\r]#{3,}.+)+)/",            // List item with sub items of 3 or more
-            "/[\n\r]#{3}(?!#) *(.+)(([\n\r]#{4,}.+)+)/",            // List item with sub items of 4 or more
+            "/(?<=[\n\r])#(.+?)/",                    // First pass, finding all blocks
+            "/(?<=[\n\r])#(?!#) *(.+?)/",            // List item with sub items of 2 or more
+            "/(?<=[\n\r])#{2}(?!#) *(.+?)/",            // List item with sub items of 3 or more
+            "/(?<=[\n\r])#{3}(?!#) *(.+?)/",            // List item with sub items of 4 or more
 
             // Unordered list
-            "/[\n\r]?\*.+([\n|\r]\*.+)+/",                    // First pass, finding all blocks
-            "/[\n\r]\*(?!\*) *(.+)(([\n\r]\*{2,}.+)+)/",            // List item with sub items of 2 or more
-            "/[\n\r]\*{2}(?!\*) *(.+)(([\n\r]\*{3,}.+)+)/",            // List item with sub items of 3 or more
-            "/[\n\r]\*{3}(?!\*) *(.+)(([\n\r]\*{4,}.+)+)/",            // List item with sub items of 4 or more
+            "/(?<=[\n\r])\*(.+?)/",                    // First pass, finding all blocks
+            "/(?<=[\n\r])\*(?!\*) *(.+?)/",            // List item with sub items of 2 or more
+            "/(?<=[\n\r])\*{2}(?!\*) *(.+?)/",            // List item with sub items of 3 or more
+            "/(?<=[\n\r])\*{3}(?!\*) *(.+?)/",            // List item with sub items of 4 or more
 
             // List items
             "/^[#\*]+ *(.+)$/m",                        // Wraps all list items to <li/>
@@ -109,7 +109,11 @@ namespace WikiParserDemo {
         {
             $text = $this->normalizeText($text);
             $words = preg_split('~\s+~', $text);
-            return count(array_flip($words));
+            $words = array_flip($words);
+            if (array_key_exists('', $words)) {
+                unset($words['']);
+            }
+            return count($words);
         }
 
         /**

@@ -3,7 +3,8 @@ namespace WikiParserDemo {
 
     use phpFastCache\CacheManager;
 
-    class Application {
+    class Application
+    {
         /**
          * @var \phpFastCache\Core\DriverAbstract
          */
@@ -42,8 +43,9 @@ namespace WikiParserDemo {
         /**
          * @param array|null $cacheConfig
          */
-        protected function initialize(array $cacheConfig = null) {
-            if(!$cacheConfig) {
+        protected function initialize(array $cacheConfig = null)
+        {
+            if (!$cacheConfig) {
                 $cachePath = getcwd() . '/cache';
                 if (!file_exists($cachePath)) {
                     mkdir($cachePath, 0777);
@@ -61,19 +63,20 @@ namespace WikiParserDemo {
          * @param bool|true $useCachedResults
          * @return mixed|null|Document
          */
-        public function runSearch($useCachedResults = true) {
-            $seachString = self::getSearchString();
-            if(!$seachString) {
+        public function runSearch($useCachedResults = true)
+        {
+            $searchString = self::getSearchString();
+            if (!$searchString) {
                 return false;
             }
-            $cachedDocument = $useCachedResults?$this->getCachedDocument($seachString):null;
-            $result = $this->client->search($seachString, $cachedDocument);
-            if($redirect = $this->checkRedirect($result)) {
+            $cachedDocument = $useCachedResults ? $this->getCachedDocument($searchString) : null;
+            $result = $this->client->search($searchString, $cachedDocument);
+            if ($redirect = $this->checkRedirect($result)) {
                 $result = $this->client->search($redirect, $cachedDocument);
             }
 
-            if($result && $result->isDirty()) {
-                $this->cacheDocument($seachString, $result);
+            if ($result && $result->isDirty()) {
+                $this->cacheDocument($searchString, $result);
                 return $result;
             } else {
                 return $cachedDocument;
@@ -84,8 +87,9 @@ namespace WikiParserDemo {
          * @param Document $document
          * @return bool
          */
-        protected function checkRedirect(Document $document) {
-            if(preg_match('~^[#]redirect \[\[(.+)\]\]$~i', $document->getContent(), $capture)) {
+        protected function checkRedirect(Document $document)
+        {
+            if (preg_match('~^[#]redirect \[\[(.+)\]\]$~i', $document->getContent(), $capture)) {
                 return $capture[1];
             }
             return false;
@@ -95,9 +99,10 @@ namespace WikiParserDemo {
          * @param string $keyword
          * @return mixed|null
          */
-        protected function getCachedDocument($keyword){
+        protected function getCachedDocument($keyword)
+        {
             $result = $this->cache->get($keyword);
-            if($result) {
+            if ($result) {
                 return unserialize($result);
             }
             return null;
@@ -107,7 +112,8 @@ namespace WikiParserDemo {
          * @param string $keyword
          * @param Document $document
          */
-        protected function cacheDocument($keyword, Document $document){
+        protected function cacheDocument($keyword, Document $document)
+        {
             $this->cache->set($keyword, serialize($document));
         }
 
@@ -115,9 +121,10 @@ namespace WikiParserDemo {
          * @param bool|false $htmlEscaped
          * @return bool|string
          */
-        public static function getSearchString($htmlEscaped = false) {
-            if(array_key_exists('search', $_POST)) {
-                if($htmlEscaped) {
+        public static function getSearchString($htmlEscaped = false)
+        {
+            if (array_key_exists('search', $_POST)) {
+                if ($htmlEscaped) {
                     return htmlentities($_POST['search'], ENT_QUOTES, 'utf-8');
                 } else {
                     return $_POST['search'];
