@@ -9,3 +9,7 @@ INSTALL
 4) use composer to update dependencies (composer update)
 
 5) open index.php in your browser
+
+REQUIRES
+========
+PHP>=5.3 with OpenSSL and cURL
