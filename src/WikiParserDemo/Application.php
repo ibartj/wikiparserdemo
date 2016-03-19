@@ -63,6 +63,9 @@ namespace WikiParserDemo {
          */
         public function runSearch($useCachedResults = true) {
             $seachString = self::getSearchString();
+            if(!$seachString) {
+                return false;
+            }
             $cachedDocument = $useCachedResults?$this->getCachedDocument($seachString):null;
             $result = $this->client->search($seachString, $cachedDocument);
             if($redirect = $this->checkRedirect($result)) {

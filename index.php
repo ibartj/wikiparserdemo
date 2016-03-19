@@ -23,7 +23,7 @@
             <?php if(!$document->isDirty()): ?>
                 <h4>Výsledek z cache.</h4>
             <?php endif; ?>
-        <?php else: ?>
+        <?php elseif($document!==false): ?>
             <h4>Nenalezeno</h4>
         <?php endif; ?>
     </form>
