@@ -5,6 +5,8 @@ namespace WikiParserDemo {
 
     class Application
     {
+        const CACHE_LIFETIME = 3600;
+        const DOCUMENT_LIFETIME = 180;
         /**
          * @var \phpFastCache\Core\DriverAbstract
          */
@@ -70,6 +72,9 @@ namespace WikiParserDemo {
                 return false;
             }
             $cachedDocument = $useCachedResults ? $this->getCachedDocument($searchString) : null;
+            if($cachedDocument && $cachedDocument->getCreatedWhen() + self::DOCUMENT_LIFETIME > time()) {
+                return $cachedDocument;
+            }
             $result = $this->client->search($searchString, $cachedDocument);
             if ($redirect = $this->checkRedirect($result)) {
                 $result = $this->client->search($redirect, $cachedDocument);
@@ -114,7 +119,7 @@ namespace WikiParserDemo {
          */
         protected function cacheDocument($keyword, Document $document)
         {
-            $this->cache->set($keyword, serialize($document));
+            $this->cache->set($keyword, serialize($document), self::CACHE_LIFETIME);
         }
 
         /**

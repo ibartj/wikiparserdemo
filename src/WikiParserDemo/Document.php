@@ -6,7 +6,7 @@ namespace WikiParserDemo {
         protected $dirty = false;
         protected $title;
         protected $notFoundWhen;
-        protected $lastModified;
+        protected $createdWhen;
         protected $lastRevId;
         protected $wordCount;
         protected $content;
@@ -16,7 +16,7 @@ namespace WikiParserDemo {
          */
         public function __sleep()
         {
-            return array('title', 'notFoundWhen', 'lastModified', 'lastRevId', 'wordCount', 'content');
+            return array('title', 'notFoundWhen', 'createdWhen', 'lastRevId', 'wordCount', 'content');
         }
 
         /**
@@ -78,17 +78,17 @@ namespace WikiParserDemo {
         /**
          * @return mixed
          */
-        public function getLastModified()
+        public function getCreatedWhen()
         {
-            return $this->lastModified;
+            return $this->createdWhen;
         }
 
         /**
-         * @param mixed $lastModified
+         * @param mixed $createdWhen
          */
-        public function setLastModified($lastModified)
+        public function setCreatedWhen($createdWhen)
         {
-            $this->lastModified = $lastModified;
+            $this->createdWhen = $createdWhen;
         }
 
         /**
@@ -152,6 +152,7 @@ namespace WikiParserDemo {
             $this->setWordCount(
                 TextTools::getInstance()->countWords($content)
             );
+            $this->setCreatedWhen(time());
         }
     }
 }
